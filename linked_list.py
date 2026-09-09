@@ -60,6 +60,7 @@ class LinkedList(object):
         print("valor", val,"nao encontrado")
         return None
     
+    #this is similar to an interator - a design patter to access parameters of object without exposing its content
     def show_list(self):
         print("mostrando a lista")
         current_node = self.root
