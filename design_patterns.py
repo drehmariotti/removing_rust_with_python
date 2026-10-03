@@ -1,4 +1,9 @@
-# Iterator
+from fastapi import FastAPI
+import uvicorn
+
+# ---------------------------------------------------------
+# 1. Iterator
+# ---------------------------------------------------------
 class Radio:
 
     def __init__(self):
@@ -18,7 +23,9 @@ class Radio:
         return estacao
 
 
-# Decorator adiciona um comportamento sem alterar o codigo da classe original
+# ---------------------------------------------------------
+# 2. Decorator
+# ---------------------------------------------------------
 class LogRadioDecorator:
 
     def __init__(self, radio: Radio):
@@ -26,17 +33,35 @@ class LogRadioDecorator:
 
     def next_station(self):
         estacao = self._radio.next_station()
-        # Adiciona o comportamento extra diretamente aqui
-        print(f"[SINTONIZANDO] -> {estacao['nome']}")
+        # Adiciona o comportamento extra diretamente aqui (aparece no terminal da API)
+        print(f"[SINTONIZANDO VIA API] -> {estacao['nome']}")
         return estacao
 
 
+# ---------------------------------------------------------
+# 3. FastAPI App
+# ---------------------------------------------------------
+app = FastAPI(title="API do Rádio")
+
+# Instância global: preserva o índice atual a cada chamada
+my_radio = LogRadioDecorator(Radio())
+
+
+@app.get("/")
+def home():
+    return {"mensagem": "API de Rádio ativa. Acesse /proxima para trocar de estação."}
+
+
+@app.get("/proxima")
+def proxima_estacao():
+    # Executa o decorator que chama o next_station() do Radio
+    estacao = my_radio.next_station()
+    return {
+        "status": "sucesso",
+        "estacao": estacao
+    }
+
+
+# Execução do servidor local
 if __name__ == "__main__":
-    my_radio = Radio()
-
-    # Decoramos a rádio com a única classe necessária
-    radio_decorado = LogRadioDecorator(my_radio)
-
-    for _ in range(5):
-        estacao = radio_decorado.next_station()
-        print(f"Tocando: {estacao['nome']} em {estacao['frequencia']} MHz\n")
+    uvicorn.run(app, host="127.0.0.1", port=8000)
