@@ -2,7 +2,7 @@ from fastapi import FastAPI
 import uvicorn
 
 # ---------------------------------------------------------
-# 1. Iterator (Sua Rádio Local)
+# 1. Iterator - navega pelos valores sem expor o conteudo das variaveis
 # ---------------------------------------------------------
 class Radio:
 
@@ -44,7 +44,7 @@ class WebRadioService:
 
 
 # ---------------------------------------------------------
-# 3. Adapter
+# 3. Adapter - quando recebemos dados de uma API que estao num formado diferente mas queremos adaptar pra rodar na nossa classe
 # ---------------------------------------------------------
 class WebRadioAdapter:
     """Adapta o WebRadioService para funcionar como um Radio normal (next_station)."""
@@ -64,7 +64,7 @@ class WebRadioAdapter:
 
 
 # ---------------------------------------------------------
-# 4. Decorator
+# 4. Decorator - adiciona comportamento sem mudar o codigo original da classe
 # ---------------------------------------------------------
 class LogRadioDecorator:
 
